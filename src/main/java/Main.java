@@ -5,14 +5,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String filePath = "C:/outputBUD.csv";
-
+        //String filePath = "C:/outputBUD.csv";
+        FileSelectorGUI.showFileSelector();
         long startTime = System.currentTimeMillis();
 
 
-        CsvProcessorApache.processCsv(filePath); //Читаем файл и заполняем сигналы
-        CloseSignals();
-        OutputSignals(); //Выводим собранную информацию
+        //CsvProcessorApache.processCsv(filePath); //Читаем файл и заполняем сигналы
+        //CloseSignals();
+        //OutputSignals(); //Выводим собранную информацию
 
         long endTime = System.currentTimeMillis();
         System.out.println("Время выполнения: " + (endTime - startTime) + " мс");
@@ -47,13 +47,13 @@ public class Main {
         }
     }
 
-    static void  OutputSignals(){
+    public static void  OutputSignals(){
         for(int i= 0; i< signals.length; i++){
             System.out.println((signals[i].name + " = " + signals[i].GetCountErrors()));
         }
     }
 
-    static void  CloseSignals(){
+    public static void  CloseSignals(){
         for(int i= 0; i< signals.length; i++){
             signals[i].AddValue(0);
         }
