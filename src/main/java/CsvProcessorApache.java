@@ -1,0 +1,47 @@
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.regex.Pattern;
+
+import static java.lang.Long.toHexString;
+
+public class CsvProcessorApache {
+
+    public static void processCsv(String filePath) {
+        try (Reader reader = new FileReader(filePath);
+             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+                     .withDelimiter('@') // использовать очень редкий разделитель
+                     .withFirstRecordAsHeader() // если есть заголовки
+                     .withIgnoreHeaderCase()
+                     .withTrim())) {
+
+            for (CSVRecord record : csvParser) {
+                // Доступ к данным по индексу
+                //String col1 = record.get(0);
+                //String col2 = record.get(1);
+
+                if(record.getRecordNumber() == 8){
+                    //System.out.println(record.get(0));
+                    Main.CreateArraySignals(record.get(0));
+                } else if(record.getRecordNumber()>8){
+                    Main.FillingSignals(record.get(0));
+                    //System.out.println(record.get(0).split(";").length);
+                }
+                //processRecord(record);
+            }
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void processRecord(CSVRecord record) {
+        // Логика обработки записи
+        System.out.println(record);
+    }
+}
