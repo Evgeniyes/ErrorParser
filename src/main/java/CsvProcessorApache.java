@@ -1,9 +1,11 @@
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.regex.Pattern;
 
 import static java.lang.Long.toHexString;
@@ -11,7 +13,9 @@ import static java.lang.Long.toHexString;
 public class CsvProcessorApache {
 
     public static void processCsv(String filePath) {
-        try (Reader reader = new FileReader(filePath);
+        try (Reader reader = new InputStreamReader(
+                new FileInputStream(filePath),
+                Charset.forName("windows-1251")); // ← Кодировка указана здесь
              CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
                      .withDelimiter('@') // использовать очень редкий разделитель
                      .withFirstRecordAsHeader() // если есть заголовки
@@ -32,8 +36,6 @@ public class CsvProcessorApache {
                 }
                 //processRecord(record);
             }
-
-
 
         } catch (IOException e) {
             e.printStackTrace();

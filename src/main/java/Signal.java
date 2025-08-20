@@ -6,6 +6,7 @@ public class Signal {
     int maxMilisecError = 0;
 
     Signal(String n){
+
         name = n;
     }
 
