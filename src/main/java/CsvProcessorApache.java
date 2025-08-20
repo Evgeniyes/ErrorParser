@@ -32,7 +32,7 @@ public class CsvProcessorApache {
                     Main.CreateArraySignals(record.get(0));
                 } else if(record.getRecordNumber()>8){
                     Main.FillingSignals(record.get(0));
-                    System.out.println(record.get(0).split(";").length);
+                    //System.out.println(record.get(0).split(";").length);
                 }
                 //processRecord(record);
 

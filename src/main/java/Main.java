@@ -1,4 +1,4 @@
-import java.util.Map;
+import java.util.ArrayList;
 
 public class Main {
     static Signal[] signals;
@@ -67,5 +67,37 @@ public class Main {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public static void FileFinish(){
+// Собираем данные из signals
+        ArrayList<String[]> data = new ArrayList<>();
+
+        for(int i = 0; i < signals.length; i++) {
+            if(!signals[i].name.contains("Banner") && !signals[i].name.contains("Coord") && signals[i].GetCountErrors()>0){
+                Signal signal = signals[i];
+                String[] tmpParam = new String[5];
+                tmpParam[0] = signal.name.split(":")[0];
+                String[] tmpName = signal.name.split("\\|");
+                tmpParam[1] = tmpName.length > 1 ? tmpName[1] : tmpName[0];
+                tmpParam[2] = String.valueOf(signal.GetCountErrors());
+                tmpParam[3] = String.valueOf(signal.minMilisecError);
+                tmpParam[4] = String.valueOf(signal.maxMilisecError);
+                data.add(tmpParam);
+//                data[i][0] = signal.name.split(":")[0];
+//                //System.out.println("Разбили строку на " +signal.name.split("\\|").length);
+//                String[] tmpName = signal.name.split("\\|");
+//                data[i][1] = tmpName.length > 1 ? tmpName[1] : tmpName[0];
+//
+//                data[i][2] = String.valueOf(signal.GetCountErrors());
+//                data[i][3] = String.valueOf(signal.minMilisecError); // замени на реальные данные
+//                data[i][4] = String.valueOf(signal.maxMilisecError);
+            }
+        }
+
+        String[] headers = {"Сигнал", "Название ошибки", "Кол-во", "Мин. время ошибки", "Макс. время ошибки"};
+
+        // Создаем и открываем файл
+        ExcelExporter.createAndOpenExcel(data, headers, "результат_обработки");
     }
 }
