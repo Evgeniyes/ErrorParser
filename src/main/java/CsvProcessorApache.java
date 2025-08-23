@@ -38,7 +38,7 @@ public class CsvProcessorApache {
 
             }
             Main.CloseSignals();
-            Main.OutputSignals();
+            //Main.OutputSignals();
         } catch (IOException e) {
             e.printStackTrace();
         }

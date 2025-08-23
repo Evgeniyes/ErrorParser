@@ -5,15 +5,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //String filePath = "C:/outputBUD.csv";
+        //SignalConverter.ConvertToKSK("")
+
+
+        //Показываем интерфейс
         FileSelectorGUI.showFileSelector();
         long startTime = System.currentTimeMillis();
-
-
-        //CsvProcessorApache.processCsv(filePath); //Читаем файл и заполняем сигналы
-        //CloseSignals();
-        //OutputSignals(); //Выводим собранную информацию
-
         long endTime = System.currentTimeMillis();
         System.out.println("Время выполнения: " + (endTime - startTime) + " мс");
     }
@@ -47,11 +44,11 @@ public class Main {
         }
     }
 
-    public static void  OutputSignals(){
-        for(int i= 0; i< signals.length; i++){
-            System.out.println((signals[i].name + " = " + signals[i].GetCountErrors()));
-        }
-    }
+//    public static void  OutputSignals(){
+//        for(int i= 0; i< signals.length; i++){
+//            System.out.println((signals[i].name + " = " + signals[i].GetCountErrors()));
+//        }
+//    }
 
     public static void  CloseSignals(){
         for(int i= 0; i< signals.length; i++){
@@ -76,13 +73,14 @@ public class Main {
         for(int i = 0; i < signals.length; i++) {
             if(!signals[i].name.contains("Banner") && !signals[i].name.contains("Coord") && signals[i].GetCountErrors()>0){
                 Signal signal = signals[i];
-                String[] tmpParam = new String[5];
+                String[] tmpParam = new String[6];
                 tmpParam[0] = signal.name.split(":")[0];
                 String[] tmpName = signal.name.split("\\|");
                 tmpParam[1] = tmpName.length > 1 ? tmpName[1] : tmpName[0];
-                tmpParam[2] = String.valueOf(signal.GetCountErrors());
-                tmpParam[3] = String.valueOf(signal.minMilisecError);
-                tmpParam[4] = String.valueOf(signal.maxMilisecError);
+                tmpParam[2] = SignalConverter.ConvertToKSK(removeLastPart(tmpParam[0]));
+                tmpParam[3] = String.valueOf(signal.GetCountErrors());
+                tmpParam[4] = String.valueOf(signal.minMilisecError);
+                tmpParam[5] = String.valueOf(signal.maxMilisecError);
                 data.add(tmpParam);
 //                data[i][0] = signal.name.split(":")[0];
 //                //System.out.println("Разбили строку на " +signal.name.split("\\|").length);
@@ -95,9 +93,22 @@ public class Main {
             }
         }
 
-        String[] headers = {"Сигнал", "Название ошибки", "Кол-во", "Мин. время ошибки", "Макс. время ошибки"};
+        String[] headers = {"Сигнал", "Название ошибки EFI", "Название ошибки КСК", "Кол-во", "Мин. время ошибки", "Макс. время ошибки"};
 
         // Создаем и открываем файл
         ExcelExporter.createAndOpenExcel(data, headers, "результат_обработки");
+    }
+
+    public static String removeLastPart(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+
+        int lastIndex = input.lastIndexOf('_');
+        if (lastIndex == -1) {
+            return input; // если нет подчеркиваний, возвращаем исходную строку
+        }
+
+        return input.substring(7, lastIndex); //возвращаем обреданные первые символы с буд и последние с вагоном
     }
 }
