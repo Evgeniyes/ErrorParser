@@ -67,7 +67,7 @@ public class Main {
     }
 
     public static void FileFinish(){
-// Собираем данные из signals
+// Собираем данные из signals и формируем массив для выгрузки в файл
         ArrayList<String[]> data = new ArrayList<>();
 
         for(int i = 0; i < signals.length; i++) {
@@ -76,20 +76,12 @@ public class Main {
                 String[] tmpParam = new String[6];
                 tmpParam[0] = signal.name.split(":")[0];
                 String[] tmpName = signal.name.split("\\|");
-                tmpParam[1] = tmpName.length > 1 ? tmpName[1] : tmpName[0];
-                tmpParam[2] = SignalConverter.ConvertToKSK(removeLastPart(tmpParam[0]));
+                tmpParam[1] = StringFormated(tmpParam[0], tmpName.length > 1 ? tmpName[1] : tmpName[0]);
+                tmpParam[2] = StringFormated(tmpParam[0], SignalConverter.ConvertToKSK(removeLastPart(tmpParam[0])));
                 tmpParam[3] = String.valueOf(signal.GetCountErrors());
-                tmpParam[4] = String.valueOf(signal.minMilisecError);
-                tmpParam[5] = String.valueOf(signal.maxMilisecError);
+                tmpParam[4] = (signal.minMilisecError / 10) + " сек.";
+                tmpParam[5] = (signal.maxMilisecError / 10) + " сек.";
                 data.add(tmpParam);
-//                data[i][0] = signal.name.split(":")[0];
-//                //System.out.println("Разбили строку на " +signal.name.split("\\|").length);
-//                String[] tmpName = signal.name.split("\\|");
-//                data[i][1] = tmpName.length > 1 ? tmpName[1] : tmpName[0];
-//
-//                data[i][2] = String.valueOf(signal.GetCountErrors());
-//                data[i][3] = String.valueOf(signal.minMilisecError); // замени на реальные данные
-//                data[i][4] = String.valueOf(signal.maxMilisecError);
             }
         }
 
@@ -110,5 +102,18 @@ public class Main {
         }
 
         return input.substring(7, lastIndex); //возвращаем обреданные первые символы с буд и последние с вагоном
+    }
+
+
+    public static String StringFormated(String sign, String label){
+        String vagon = sign.substring(sign.lastIndexOf("_")+1);
+        System.out.println("vagon=" + vagon);
+        System.out.println("sign=" + sign);
+
+        String bud = Character.toString(sign.charAt(sign.indexOf("BUD") + 3));
+
+        int dotIndex = label.indexOf('.');
+        String tmpLabe = dotIndex != -1 ? label.substring(dotIndex + 1) : label;
+        return "Вагон " + vagon + " БУД" + bud + " " + tmpLabe;
     }
 }
