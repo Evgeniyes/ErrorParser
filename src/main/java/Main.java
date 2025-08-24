@@ -1,12 +1,14 @@
 import java.util.ArrayList;
+import java.io.InputStream;
+import javax.swing.JOptionPane;
 
 public class Main {
     static Signal[] signals;
 
     public static void main(String[] args) {
 
-        //SignalConverter.ConvertToKSK("")
-
+        // Проверка наличия ресурсов
+        checkResources();
 
         //Показываем интерфейс
         FileSelectorGUI.showFileSelector();
@@ -115,5 +117,33 @@ public class Main {
         int dotIndex = label.indexOf('.');
         String tmpLabe = dotIndex != -1 ? label.substring(dotIndex + 1) : label;
         return "Вагон " + vagon + " БУД" + bud + " " + tmpLabe;
+    }
+
+    private static void checkResources() {
+        try {
+            System.out.println("Checking resources...");
+            var url = Main.class.getClassLoader().getResource("SignalList.csv");
+            System.out.println("Resource URL: " + url);
+
+            if (url == null) {
+                System.err.println("ERROR: SignalList.csv not found in resources!");
+                // Получим список всех ресурсов
+                try {
+                    var resources = Main.class.getClassLoader().getResources("");
+                    while (resources.hasMoreElements()) {
+                        System.out.println("Available resource: " + resources.nextElement());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("SignalList.csv found: " + url.getPath());
+                try (InputStream stream = url.openStream()) {
+                    System.out.println("File size: " + stream.available() + " bytes");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
